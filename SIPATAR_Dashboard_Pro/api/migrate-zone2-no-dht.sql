@@ -1,0 +1,3 @@
+ALTER TABLE sensor_readings
+  MODIFY temperature DECIMAL(6, 2) NULL DEFAULT NULL,
+  MODIFY humidity DECIMAL(5, 2) NULL DEFAULT NULL;

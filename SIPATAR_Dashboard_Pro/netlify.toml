@@ -1,0 +1,12 @@
+[build]
+  publish = "web"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/api/telegram/test"
+  to = "/.netlify/functions/telegram-test"
+  status = 200
+  force = true

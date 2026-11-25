@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SIPATAR | Monitoring Kebakaran</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loginView" class="login-screen hidden">
+    <form id="loginForm" class="login-card">
+      <div class="brand-mark large">S</div>
+      <p class="eyebrow">SISTEM MONITORING KEBAKARAN</p>
+      <h1>Masuk ke SIPATAR</h1>
+      <p class="muted">Mode demonstrasi lokal. Jangan gunakan kredensial ini untuk sistem produksi.</p>
+      <label>Username<input id="loginUsername" autocomplete="username" required value="admin"></label>
+      <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required value="sipatar123"></label>
+      <p id="loginError" class="form-error" aria-live="polite"></p>
+      <button class="btn primary full" type="submit">Masuk <span>→</span></button>
+      <p class="tiny">Demo: <b>admin</b> / <b>sipatar123</b></p>
+    </form>
+  </div>
+
+  <div id="appShell" class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <div><strong>SIPATAR</strong><small>Fire Monitoring System</small></div>
+      </div>
+      <div class="side-label">MENU UTAMA</div>
+      <nav id="mainNav" class="nav">
+        <button class="nav-link active" data-page="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-link" data-page="grafik"><span>⌁</span> Grafik Sensor</button>
+        <button class="nav-link" data-page="kamera"><span>▣</span> Kamera</button>
+        <button class="nav-link" data-page="perangkat"><span>⌘</span> Perangkat & Sensor</button>
+        <button class="nav-link" data-page="laporan"><span>▤</span> Laporan Kejadian</button>
+        <div class="side-label nav-section">ADMINISTRASI</div>
+        <button class="nav-link" data-page="acl"><span>♙</span> Access Control List</button>
+        <button class="nav-link" data-page="telegram"><span>➤</span> Telegram Bot</button>
+        <button class="nav-link" data-page="pengaturan"><span>⚙</span> Pengaturan</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="connection"><i class="dot green"></i><div><b>Mode lokal</b><small id="sideConnection">Data simulasi aktif</small></div></div>
+        <button id="sidebarLogout" class="nav-link logout"><span>↪</span> Keluar</button>
+        <small class="version">SIPATAR UI · v1.0</small>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button id="mobileMenu" class="icon-btn mobile-only" aria-label="Buka menu">☰</button>
+        <div><div class="breadcrumb">SIPATAR <span>/</span> <b id="pageCrumb">Dashboard</b></div><h1 id="pageTitle">Dashboard Monitoring</h1></div>
+        <div class="top-actions">
+          <span class="live-pill"><i class="dot green"></i><span id="topMode">SIMULASI</span></span>
+          <button id="themeToggle" class="icon-btn" title="Ganti tema" aria-label="Ganti tema">◐</button>
+          <button id="userMenu" class="user-chip" title="Akun aktif"><span class="avatar" id="userInitial">A</span><span><b id="currentUser">Admin</b><small id="currentRole">Administrator</small></span><span>⌄</span></button>
+        </div>
+      </header>
+
+      <div class="content">
+        <div id="toastRegion" class="toast-region" aria-live="polite"></div>
+
+        <section class="page active" id="page-dashboard">
+          <div class="welcome-row"><div><p class="eyebrow">RINGKASAN OPERASIONAL</p><h2>Selamat datang, <span id="welcomeName">Admin</span></h2><p class="muted">Pantau kondisi sensor dan status risiko pada titik pemantauan.</p></div><div class="date-chip" id="currentDate"></div></div>
+          <div class="alert-banner" id="riskBanner"><div class="alert-icon">!</div><div><b id="bannerTitle">Sistem dalam kondisi normal</b><p id="bannerText">Tidak ada indikasi bahaya pada data saat ini.</p></div><span class="status-badge safe" id="bannerBadge">AMAN</span></div>
+          <div class="zone-grid">
+            <article class="zone-card" id="zone1Card">
+              <div class="zone-card-head"><div class="zone-title"><span class="zone-icon">1</span><div><p class="eyebrow">ESP8266</p><h3>Zona 1</h3></div></div><span class="status-badge neutral" id="zone1Status"><i></i>OFFLINE</span></div>
+              <div class="zone-sensors">
+                <div class="sensor-cell"><span class="sensor-label">Suhu</span><b id="zone1Temp">— °C</b></div>
+                <div class="sensor-cell"><span class="sensor-label">Kelembapan</span><b id="zone1Humidity">— %</b></div>
+                <div class="sensor-cell"><span class="sensor-label">Gas / Asap</span><b id="zone1Gas">— ADC</b></div>
+                <div class="sensor-cell"><span class="sensor-label">Flame</span><b id="zone1Flame">Belum ada data</b></div>
+              </div>
+              <p class="zone-time" id="zone1Time">Belum menerima data</p>
+            </article>
+            <article class="zone-card" id="zone2Card">
+              <div class="zone-card-head"><div><p class="eyebrow">ESP8266</p><h3>Zona 2</h3></div><span class="status-badge neutral" id="zone2Status">OFFLINE</span></div>
+              <div class="zone-sensors">
+                <div><span>Suhu</span><b id="zone2Temp">— °C</b></div>
+                <div><span>Kelembapan</span><b id="zone2Humidity">— %</b></div>
+                <div><span>Gas / Asap</span><b id="zone2Gas">— ADC</b></div>
+                <div><span>Flame</span><b id="zone2Flame">Belum ada data</b></div>
+              </div>
+              <p class="zone-time" id="zone2Time">Belum menerima data</p>
+            </article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel chart-panel"><div class="panel-head"><div><h3>Tren pembacaan sensor</h3><p>Riwayat gabungan Zona 1 dan Zona 2</p></div><button class="text-button" data-go="grafik">Lihat grafik ↗</button></div><div class="chart-legend"><span><i class="legend-line temp-line"></i>Suhu (°C)</span><span><i class="legend-line gas-line"></i>Gas (ADC)</span></div><canvas id="miniChart" height="190" aria-label="Grafik ringkasan sensor"></canvas></article>
+            <article class="panel camera-panel"><div class="panel-head"><div><h3>Live Camera</h3><p id="cameraStatus">Belum terhubung</p></div><span class="status-badge neutral" id="cameraBadge">OFFLINE</span></div><div class="camera-preview" id="miniCamera"><div class="camera-placeholder"><span class="camera-symbol">▣</span><b>Feed kamera belum tersedia</b><small>Atur IP ESP32-CAM pada menu Kamera.</small></div></div><div class="panel-foot"><span id="cameraUrlLabel">URL belum dikonfigurasi</span><button class="btn small secondary" data-go="kamera">Buka kamera</button></div></article>
+          </div>
+          <article class="panel"><div class="panel-head"><div><h3>Kejadian terbaru</h3><p>Aktivitas monitoring terkini</p></div><button class="text-button" data-go="laporan">Semua laporan ↗</button></div><div class="table-wrap"><table><thead><tr><th>Waktu</th><th>Lokasi</th><th>Kejadian</th><th>Level</th><th>Status</th></tr></thead><tbody id="recentEvents"></tbody></table></div></article>
+        </section>
+
+        <section class="page" id="page-grafik">
+          <div class="page-intro"><div><p class="eyebrow">ANALISIS DATA</p><h2>Grafik Sensor</h2><p class="muted">Pantau perubahan pembacaan sensor berdasarkan rentang waktu.</p></div><div class="toolbar"><select id="chartZone" aria-label="Zona grafik"><option value="all">Semua zona</option><option value="zona1">Zona 1</option><option value="zona2">Zona 2</option></select><select id="chartRange" aria-label="Rentang grafik"><option value="10">10 titik terakhir</option><option value="20">20 titik terakhir</option><option value="30">30 titik terakhir</option></select><button class="btn secondary" id="refreshChart">↻ Perbarui</button></div></div>
+          <div class="stats-grid compact-stats">
+            <article class="stat-card"><div class="stat-head"><span>Suhu rata-rata</span><span class="stat-icon orange">♨</span></div><div class="stat-value"><span id="avgTemp">28.4</span><small>°C</small></div><div class="stat-foot">Pada rentang terpilih</div></article>
+            <article class="stat-card"><div class="stat-head"><span>Gas maksimum</span><span class="stat-icon purple">◉</span></div><div class="stat-value"><span id="maxGas">218</span><small>ADC</small></div><div class="stat-foot">Pada rentang terpilih</div></article>
+            <article class="stat-card"><div class="stat-head"><span>Data terkumpul</span><span class="stat-icon blue">⌁</span></div><div class="stat-value"><span id="dataCount">0</span><small>titik</small></div><div class="stat-foot">Data MySQL / simulasi</div></article>
+          </div>
+          <article class="panel"><div class="panel-head"><div><h3>Suhu dan gas</h3><p>Grafik digambar langsung menggunakan Canvas tanpa library eksternal.</p></div></div><div class="chart-legend"><span><i class="legend-line temp-line"></i>Suhu (°C)</span><span><i class="legend-line gas-line"></i>Gas (ADC, skala visual)</span></div><canvas id="fullChart" height="310" aria-label="Grafik suhu dan gas"></canvas></article>
+          <div class="two-col"><article class="panel"><div class="panel-head"><div><h3>Kelembapan</h3><p>Perubahan kelembapan relatif</p></div></div><canvas id="humidityChart" height="210" aria-label="Grafik kelembapan"></canvas></article><article class="panel"><div class="panel-head"><div><h3>Catatan interpretasi</h3><p>Perhatian untuk penggunaan data</p></div></div><ul class="info-list"><li>Nilai grafik saat mode simulasi merupakan data contoh, bukan hasil sensor nyata.</li><li>Pembacaan MQ-2 ditampilkan sebagai nilai ADC, bukan ppm.</li><li>Kalibrasi sensor dan uji ambang perlu dilakukan sebelum dipakai sebagai sistem peringatan.</li></ul></article></div>
+        </section>
+
+        <section class="page" id="page-kamera">
+          <div class="page-intro"><div><p class="eyebrow">VIDEO MONITORING</p><h2>Kamera ESP32-CAM</h2><p class="muted">Stream langsung dan snapshot berkala yang tersimpan di Laragon.</p></div><span class="status-badge neutral" id="cameraPageBadge">BELUM DIATUR</span></div>
+          <div class="two-col camera-layout"><article class="panel"><div class="panel-head"><div><h3>Live stream</h3><p id="cameraPageStatus">Menunggu konfigurasi URL kamera.</p></div><span class="live-pill"><i class="dot red-dot"></i> LIVE</span></div><div class="camera-stage" id="cameraStage"><div class="camera-placeholder"><span class="camera-symbol">▣</span><b>Kamera belum dikonfigurasi</b><small>Isi URL stream pada panel pengaturan di sebelah kanan.</small></div></div><div class="panel-foot"><span id="cameraPageUrl">—</span><button class="btn secondary small" id="openStream">Buka stream ↗</button></div></article>
+          <article class="panel"><div class="panel-head"><div><h3>Konfigurasi kamera</h3><p>Alamat lokal pada jaringan Wi-Fi yang sama</p></div></div><form id="cameraForm" class="form-stack"><label>Alamat live stream<input id="cameraInput" type="url" placeholder="http://192.168.1.123/stream" required></label><label>Alamat snapshot (opsional)<input id="snapshotInput" type="url" placeholder="http://192.168.1.123/capture"></label><div class="form-note">Pastikan IP adalah alamat yang muncul di Serial Monitor. Firmware menyediakan stream dan capture pada port 80.</div><div class="button-row"><button class="btn primary" type="submit">Terapkan kamera</button><button class="btn secondary" type="button" id="clearCamera">Hapus</button></div></form><div class="divider"></div><h4>Pemeriksaan koneksi</h4><ul class="info-list compact"><li>Laptop dan kamera berada pada jaringan yang sama.</li><li>Buka URL stream langsung di tab browser untuk menguji kamera.</li><li>Jika gambar tidak muncul, periksa daya, Serial Monitor, IP, dan jaringan.</li></ul></article></div>
+          <article class="panel"><div class="panel-head"><div><h3>Snapshot ESP32-CAM</h3><p>Foto kamera diunggah ke penyimpanan Laragon setiap 5 menit.</p></div><button class="btn secondary small" id="refreshSnapshots">↻ Perbarui</button></div><div id="cameraSnapshots" class="snapshot-grid"><p class="muted tiny">Memuat daftar snapshot…</p></div></article>
+        </section>
+
+        <section class="page" id="page-perangkat">
+          <div class="page-intro"><div><p class="eyebrow">INVENTARIS PERANGKAT</p><h2>Perangkat & Sensor</h2><p class="muted">Pantau koneksi dua sensor zona dan ESP32-CAM.</p></div><button class="btn primary" id="addDevice">＋ Tambah perangkat</button></div>
+          <div class="device-grid" id="deviceGrid"></div>
+          <article class="panel"><div class="panel-head"><div><h3>Konfigurasi sumber sensor</h3><p>Pembacaan Zona 1 dan Zona 2 disimpan oleh MySQL melalui Laragon.</p></div></div><form id="sensorConfigForm" class="form-grid"><label>Interval refresh dashboard (ms)<input id="pollInput" type="number" min="1000" step="500" value="3000"></label><label>Mode data<select id="dataMode"><option value="laragon">Laragon + MySQL</option><option value="demo">Simulasi (demo)</option></select></label><div class="button-row full-row"><button class="btn primary" type="submit">Simpan konfigurasi</button><button class="btn secondary" type="button" id="testSensorApi">Uji koneksi</button></div></form><p class="muted tiny">ESP8266 mengirim data ke API Laragon setiap 10 detik. Dashboard dan perangkat harus berada pada jaringan lokal yang sama; atur URL server dan token di konfigurasi firmware.</p></article>
+        </section>
+
+        <section class="page" id="page-laporan">
+          <div class="page-intro"><div><p class="eyebrow">AUDIT & DOKUMENTASI</p><h2>Laporan Kejadian</h2><p class="muted">Filter, telusuri, dan ekspor daftar kejadian.</p></div><div class="toolbar"><button class="btn secondary" id="exportCsv">⇩ Ekspor CSV</button><button class="btn primary" id="addEvent">＋ Catat kejadian</button></div></div>
+          <div class="filter-bar"><input id="reportSearch" type="search" placeholder="Cari lokasi atau kejadian…"><select id="severityFilter"><option value="all">Semua level</option><option value="Aman">Aman</option><option value="Waspada">Waspada</option><option value="Kebakaran">Kebakaran</option></select><select id="reportRange"><option value="all">Semua waktu</option><option value="today">Hari ini</option></select><button class="btn secondary" id="resetFilters">Reset filter</button></div>
+          <div class="stats-grid compact-stats"><article class="stat-card"><div class="stat-head"><span>Total kejadian</span><span class="stat-icon blue">▤</span></div><div class="stat-value"><span id="reportTotal">0</span></div></article><article class="stat-card"><div class="stat-head"><span>Waspada</span><span class="stat-icon orange">!</span></div><div class="stat-value"><span id="reportWarn">0</span></div></article><article class="stat-card"><div class="stat-head"><span>Kebakaran</span><span class="stat-icon red">♨</span></div><div class="stat-value"><span id="reportFire">0</span></div></article></div>
+          <article class="panel"><div class="table-wrap"><table><thead><tr><th>Waktu</th><th>Lokasi</th><th>Kejadian</th><th>Level</th><th>Petugas</th><th>Aksi</th></tr></thead><tbody id="reportRows"></tbody></table></div><div class="table-footer"><span id="reportShowing">Menampilkan 0 data</span><button id="clearReports" class="text-button danger-text">Hapus semua data demo</button></div></article>
+        </section>
+
+        <section class="page" id="page-acl">
+          <div class="page-intro"><div><p class="eyebrow">KEAMANAN AKSES</p><h2>Access Control List</h2><p class="muted">Contoh pengelolaan akun dan peran. Perubahan tersimpan lokal di browser ini.</p></div><button class="btn primary" id="addUser">＋ Tambah pengguna</button></div>
+          <div class="alert-banner info-banner"><div class="alert-icon">i</div><div><b>Mode ACL demonstrasi</b><p>Kontrol ini hanya mengatur antarmuka lokal. Keamanan produksi memerlukan autentikasi dan otorisasi di backend.</p></div></div>
+          <article class="panel"><div class="table-wrap"><table><thead><tr><th>Pengguna</th><th>Peran</th><th>Izin</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="userRows"></tbody></table></div></article>
+          <div class="two-col"><article class="panel"><div class="panel-head"><div><h3>Peran & izin</h3><p>Ringkasan akses berdasarkan peran</p></div></div><div class="role-list"><div><b>Administrator</b><span>Semua halaman dan pengaturan</span></div><div><b>Operator</b><span>Dashboard, kamera, perangkat, laporan</span></div><div><b>Viewer</b><span>Dashboard, grafik, kamera, laporan</span></div></div></article><article class="panel"><div class="panel-head"><div><h3>Audit akses lokal</h3><p>Aktivitas sesi di browser</p></div></div><div id="auditList" class="audit-list"></div></article></div>
+        </section>
+
+        <section class="page" id="page-telegram">
+          <div class="page-intro"><div><p class="eyebrow">NOTIFIKASI EKSTERNAL</p><h2>Telegram Bot</h2><p class="muted">Siapkan kanal notifikasi untuk peringatan SIPATAR.</p></div><span class="status-badge neutral" id="telegramBadge">BELUM DIUJI</span></div>
+          <div class="two-col"><article class="panel"><div class="panel-head"><div><h3>Konfigurasi bot</h3><p>Token yang dimasukkan di sini hanya dipakai untuk pesan uji, tidak disimpan di browser.</p></div></div><form id="telegramForm" class="form-stack"><label>Bot token<input id="telegramToken" type="password" placeholder="Masukkan token dari BotFather" autocomplete="off"></label><label>Chat ID atau username kanal<input id="telegramChat" type="text" placeholder="Contoh: 123456789 atau @nama_kanal" required></label><label class="check-row"><input id="telegramEnabled" type="checkbox"> Tandai bot aktif pada dashboard (lokal)</label><div class="form-note warning-note">Untuk notifikasi otomatis, isi token dan Chat ID di firmware/esp8266_sensor/include/local_config.h, aktifkan TELEGRAM_ENABLED, lalu unggah ulang ESP8266. Jangan bagikan token bot.</div><div class="button-row"><button class="btn primary" type="submit">Simpan pengaturan</button><button class="btn secondary" type="button" id="testTelegram">Kirim pesan uji</button></div></form></article><article class="panel"><div class="panel-head"><div><h3>Aturan notifikasi</h3><p>Atur notifikasi ESP8266 dengan TELEGRAM_NOTIFY_* di local_config.h. Notifikasi offline perlu pemantau cloud.</p></div></div><form id="telegramRules" class="form-stack"><label class="check-row"><input id="notifyWarning" type="checkbox" checked> Status Waspada</label><label class="check-row"><input id="notifyFire" type="checkbox" checked> Status Kebakaran</label><label class="check-row"><input id="notifyOffline" type="checkbox" checked> Perangkat offline (perlu pemantau cloud)</label><label class="check-row"><input id="notifyRecovery" type="checkbox"> Status kembali normal</label><button class="btn primary" type="submit">Simpan aturan</button></form><div class="divider"></div><h4>Log notifikasi</h4><div id="telegramLog" class="audit-list"></div></article></div>
+        </section>
+
+        <section class="page" id="page-pengaturan">
+          <div class="two-col"><article class="panel"><div class="panel-head"><div><h3>Ambang sensor dashboard</h3><p>Dipakai untuk menilai status dan peringatan pada data simulasi maupun data perangkat nyata.</p></div></div><form id="thresholdForm" class="form-stack"><label>Suhu bahaya (°C)<input id="tempThreshold" type="number" min="1" max="120" step="0.5" value="50" required></label><label>Kelembapan minimum (%)<input id="humidityMinThreshold" type="number" min="0" max="100" step="1" value="30" required></label><label>Kelembapan maksimum (%)<input id="humidityMaxThreshold" type="number" min="0" max="100" step="1" value="80" required></label><label>Gas/asap: ambang waspada (ADC)<input id="gasThreshold" type="number" min="1" max="4094" step="1" value="400" required></label><label>Gas/asap: ambang bahaya (ADC)<input id="gasFireThreshold" type="number" min="2" max="4095" step="1" value="680" required></label><label class="check-row"><input id="flameAlertEnabled" type="checkbox" checked> Aktifkan peringatan saat flame sensor mendeteksi api</label><div class="form-note warning-note">Flame sensor hanya mendeteksi api, bukan suhu. Untuk ambang °C, gunakan sensor suhu DHT22. Pengaturan ini mengubah peringatan dashboard saja; ambang buzzer/LED pada ESP8266 masih diatur terpisah di firmware.</div><button class="btn primary" type="submit">Simpan ambang sensor</button></form></article><article class="panel"><div class="panel-head"><div><h3>Data dan sesi</h3><p>Kontrol data demonstrasi pada browser.</p></div></div><div class="settings-actions"><button class="btn secondary full" id="downloadBackup">⇩ Unduh backup JSON</button><button class="btn secondary full" id="resetDemo">Reset data demo</button><button class="btn danger full" id="logoutSettings">Keluar dari SIPATAR</button></div><div class="form-note">Pengaturan disimpan pada localStorage browser. Menghapus data situs dapat menghapus pengaturan ini.</div></article></div>
+          <article class="panel"><div class="panel-head"><div><h3>Informasi sistem</h3><p>Lingkungan aplikasi</p></div></div><div class="system-info"><div><span>Versi UI</span><b>1.0.0</b></div><div><span>Frontend</span><b>HTML · CSS · JavaScript</b></div><div><span>Server halaman</span><b>Laragon Apache + PHP</b></div><div><span>Database</span><b>MySQL</b></div></div></article>
+        </section>
+      </div>
+      <footer class="footer"><span>© SIPATAR · Sistem Pemonitoran Bahaya Kebakaran</span><span>Monitoring UI · Jangan gunakan demo sebagai sistem keselamatan tunggal</span></footer>
+    </main>
+  </div>
+
+  <dialog id="eventDialog" class="modal"><form id="eventForm" method="dialog"><div class="modal-head"><div><p class="eyebrow">LAPORAN MANUAL</p><h3>Catat kejadian</h3></div><button type="button" class="icon-btn" data-close="eventDialog">×</button></div><label>Lokasi<input id="eventLocation" required placeholder="Contoh: Greenhouse - Zona A"></label><label>Jenis kejadian<input id="eventDescription" required placeholder="Contoh: Pembacaan gas meningkat"></label><label>Level<select id="eventSeverity"><option>Aman</option><option>Waspada</option><option>Kebakaran</option></select></label><label>Petugas<input id="eventOperator" required value="Admin"></label><div class="modal-actions"><button type="button" class="btn secondary" data-close="eventDialog">Batal</button><button type="submit" class="btn primary">Simpan kejadian</button></div></form></dialog>
+  <dialog id="userDialog" class="modal"><form id="userForm" method="dialog"><div class="modal-head"><div><p class="eyebrow">MANAJEMEN AKUN</p><h3>Tambah pengguna</h3></div><button type="button" class="icon-btn" data-close="userDialog">×</button></div><label>Nama pengguna<input id="newUserName" required placeholder="Nama lengkap"></label><label>Username<input id="newUsername" required pattern="[A-Za-z0-9._-]{3,24}" placeholder="username"></label><label>Peran<select id="newUserRole"><option>Operator</option><option>Viewer</option><option>Administrator</option></select></label><div class="form-note">Pengguna ditambahkan ke daftar ACL lokal. Ini bukan pembuatan akun server sungguhan.</div><div class="modal-actions"><button type="button" class="btn secondary" data-close="userDialog">Batal</button><button type="submit" class="btn primary">Tambah</button></div></form></dialog>
+  <script src="app.js?v=zonecards2"></script>
+</body>
+</html>
